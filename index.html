@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>今鶴義式餐酒館｜大訂點餐表單</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Serif+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --cream:#f5f0e8;--parchment:#ede5d0;--espresso:#2c1a0e;--bark:#5c3d2e;
+  --terracotta:#b85c38;--sage:#7a8c6e;--gold:#c9a84c;--warm-white:#faf7f2;--red-deep:#8b1a1a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);background-image:radial-gradient(ellipse at 10% 20%,rgba(200,168,76,.08) 0%,transparent 55%),radial-gradient(ellipse at 90% 80%,rgba(184,92,56,.07) 0%,transparent 55%);font-family:'Noto Serif TC',serif;color:var(--espresso);min-height:100vh;padding:40px 20px 80px;}
+.container{max-width:880px;margin:0 auto;}
+
+/* Header */
+.header{text-align:center;margin-bottom:40px;}
+.hline{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px;}
+.hline .l{width:80px;height:1px;background:linear-gradient(to right,transparent,var(--gold));}
+.hline .r{background:linear-gradient(to left,transparent,var(--gold));}
+.header h1{font-family:'Noto Serif TC',serif;font-size:clamp(22px,5vw,40px);font-weight:700;letter-spacing:.04em;line-height:1.2;}
+.header h1 em{font-style:italic;color:var(--terracotta);}
+.header p{margin-top:8px;font-size:12px;letter-spacing:.15em;color:var(--bark);font-weight:300;}
+
+/* Section title */
+.section-title{font-family:'Noto Serif TC',serif;font-size:14px;font-style:italic;color:var(--gold);letter-spacing:.15em;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:rgba(201,168,76,.3);}
+
+/* Reservation card */
+.reservation-card{background:linear-gradient(135deg,#2c1a0e,#5c3d2e);border-radius:6px;padding:26px 30px;margin-bottom:28px;box-shadow:0 4px 24px rgba(44,26,14,.25);position:relative;overflow:hidden;}
+.reservation-card::before{content:'';position:absolute;top:-30px;right:-30px;width:160px;height:160px;background:radial-gradient(circle,rgba(201,168,76,.15) 0%,transparent 70%);pointer-events:none;}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:540px){.res-grid{grid-template-columns:1fr;}}
+.res-grid .span2{grid-column:1/-1;}
+.res-label{font-size:10px;letter-spacing:.2em;color:rgba(245,240,232,.6);text-transform:uppercase;margin-bottom:6px;font-weight:500;}
+.res-input,.res-select{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(201,168,76,.3);border-radius:3px;color:var(--cream);font-family:'Noto Serif TC',serif;font-size:14px;padding:9px 13px;outline:none;transition:border-color .2s,background .2s;-webkit-appearance:none;appearance:none;}
+.res-input::placeholder{color:rgba(245,240,232,.3);}
+.res-input:focus,.res-select:focus{border-color:var(--gold);background:rgba(255,255,255,.13);}
+.res-select option{background:#3a2010;color:var(--cream);}
+.sw{position:relative;}
+.sw::after{content:'▾';position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--gold);pointer-events:none;font-size:12px;}
+.res-date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:420px){.res-date-row{grid-template-columns:1fr;}}
+.res-note{font-size:11px;color:rgba(245,240,232,.4);margin-top:6px;font-style:italic;}
+
+/* Order card */
+.order-card{background:var(--warm-white);border:1px solid rgba(92,61,46,.15);border-radius:4px;margin-bottom:18px;position:relative;overflow:hidden;box-shadow:0 2px 16px rgba(44,26,14,.07);animation:slideIn .35s ease both;}
+@keyframes slideIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.card-accent{position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(to bottom,var(--gold),var(--terracotta));}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:13px 20px 11px 28px;border-bottom:1px solid rgba(92,61,46,.1);flex-wrap:wrap;gap:8px;}
+.card-number{font-family:'Noto Serif TC',serif;font-size:13px;font-style:italic;color:var(--gold);letter-spacing:.1em;}
+.card-subtotal{font-size:13px;color:var(--terracotta);font-weight:500;}
+.card-subtotal span{font-family:'Noto Serif TC',serif;font-size:17px;}
+.btn-remove{background:none;border:1px solid rgba(184,92,56,.3);border-radius:2px;color:var(--terracotta);cursor:pointer;font-size:11px;letter-spacing:.08em;padding:4px 10px;font-family:'Noto Serif TC',serif;transition:all .2s;}
+.btn-remove:hover{background:var(--terracotta);color:#fff;}
+.card-body{padding:18px 28px 22px;display:grid;gap:15px;}
+.field-group{display:flex;flex-direction:column;gap:5px;}
+.field-label{font-size:10px;letter-spacing:.18em;color:var(--bark);font-weight:500;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.req{color:var(--terracotta);}
+.opt{color:var(--sage);font-size:9px;font-style:italic;text-transform:none;letter-spacing:.05em;}
+input[type="text"],select.ms{width:100%;border:1px solid rgba(92,61,46,.2);border-radius:2px;background:var(--cream);color:var(--espresso);font-family:'Noto Serif TC',serif;font-size:13px;padding:9px 13px;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;appearance:none;}
+input[type="text"]:focus,select.ms:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.12);}
+input[type="text"]::placeholder{color:rgba(92,61,46,.35);}
+.svw{position:relative;}
+.svw::after{content:'▾';position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--gold);pointer-events:none;font-size:12px;}
+.price-tag{font-size:11px;color:var(--red-deep);padding:3px 8px;background:rgba(139,26,26,.07);border-radius:20px;display:inline-block;margin-top:3px;min-height:20px;}
+.divider{height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,.25),transparent);}
+
+/* Set box */
+.set-box{border:1px dashed rgba(201,168,76,.45);border-radius:3px;padding:14px 15px;background:rgba(201,168,76,.04);}
+.set-box-title{font-size:10px;letter-spacing:.15em;color:var(--sage);text-transform:uppercase;margin-bottom:12px;font-weight:500;}
+.set-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:500px){.set-row{grid-template-columns:1fr;}}
+.drink-field{display:none;}
+.drink-field.visible{display:flex;flex-direction:column;gap:5px;}
+.set-desc{font-size:11px;color:var(--sage);margin-top:4px;font-style:italic;}
+
+/* Drink customise row */
+.drink-opts-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;}
+@media(max-width:500px){.drink-opts-row{grid-template-columns:1fr;}}
+.drink-opts-row .svw select.ms{font-size:12px;padding:7px 30px 7px 10px;background:var(--parchment);}
+.drink-fixed-note{font-size:11px;color:var(--sage);font-style:italic;margin-top:5px;padding:5px 10px;background:rgba(122,140,110,.08);border-radius:3px;border-left:2px solid var(--sage);}
+
+/* Individual drink box */
+.indiv-drink-box{border:1px dashed rgba(92,61,46,.2);border-radius:3px;padding:14px 15px;background:rgba(92,61,46,.03);}
+.indiv-drink-box-title{font-size:10px;letter-spacing:.15em;color:var(--bark);text-transform:uppercase;margin-bottom:10px;font-weight:500;}
+
+/* Add button */
+.add-section{text-align:center;margin:22px 0 32px;}
+.btn-add{background:none;border:2px solid var(--terracotta);border-radius:3px;color:var(--terracotta);cursor:pointer;font-family:'Noto Serif TC',serif;font-size:15px;letter-spacing:.08em;padding:10px 30px;transition:all .25s;display:inline-flex;align-items:center;gap:10px;}
+.btn-add:hover{background:var(--terracotta);color:var(--warm-white);box-shadow:0 4px 20px rgba(184,92,56,.25);transform:translateY(-1px);}
+.btn-add .plus{font-size:20px;line-height:1;font-weight:300;font-family:'Noto Serif TC',serif;}
+
+/* Single-order (單點) card */
+.alacarte-card{background:var(--warm-white);border:1px solid rgba(92,61,46,.15);border-radius:4px;margin-bottom:28px;overflow:hidden;box-shadow:0 2px 16px rgba(44,26,14,.07);}
+.alacarte-card .card-accent{background:linear-gradient(to bottom,var(--sage),var(--gold));}
+.alacarte-header{display:flex;align-items:center;justify-content:space-between;padding:13px 20px 11px 28px;border-bottom:1px solid rgba(92,61,46,.1);flex-wrap:wrap;gap:8px;}
+.alacarte-title{font-family:'Noto Serif TC',serif;font-size:13px;font-style:italic;color:var(--sage);letter-spacing:.1em;}
+.alacarte-subtotal{font-size:13px;color:var(--sage);font-weight:500;}
+.alacarte-subtotal span{font-family:'Noto Serif TC',serif;font-size:17px;}
+.alacarte-body{padding:18px 28px 24px;display:grid;gap:20px;}
+.alacarte-cat-title{font-size:11px;letter-spacing:.15em;color:var(--bark);text-transform:uppercase;font-weight:500;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(92,61,46,.1);}
+.item-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:7px 0;}
+.item-row:not(:last-child){border-bottom:1px dotted rgba(92,61,46,.1);}
+.item-main-col{flex:1;display:flex;flex-direction:column;gap:5px;}
+.item-name{font-size:13px;color:var(--espresso);}
+.item-opts-row{display:flex;flex-wrap:wrap;gap:6px;}
+.item-opts-row .svw{min-width:120px;flex:1;}
+.item-opts-row .svw select.ms{font-size:11px;padding:5px 28px 5px 8px;background:var(--parchment);}
+.item-fixed-note{font-size:10px;color:var(--sage);font-style:italic;padding:3px 7px;background:rgba(122,140,110,.09);border-radius:3px;display:inline-block;}
+.item-price-label{font-size:12px;color:var(--bark);white-space:nowrap;margin-right:4px;padding-top:2px;}
+.item-qty{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.qty-btn{width:26px;height:26px;border-radius:50%;border:1px solid rgba(92,61,46,.25);background:var(--cream);color:var(--bark);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .18s;line-height:1;}
+.qty-btn:hover{background:var(--terracotta);color:#fff;border-color:var(--terracotta);}
+.qty-num{width:24px;text-align:center;font-family:'Noto Serif TC',serif;font-size:15px;color:var(--espresso);}
+.item-subtotal{font-size:12px;color:var(--terracotta);font-weight:500;min-width:36px;text-align:right;padding-top:2px;}
+/* Sub-entries (per-unit option rows) */
+.sub-entries-container{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
+.sub-entry{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:rgba(122,140,110,.07);border-left:2px solid rgba(122,140,110,.3);padding:5px 8px;border-radius:0 3px 3px 0;animation:slideIn .2s ease both;}
+.entry-remove-btn{background:none;border:none;color:rgba(184,92,56,.5);cursor:pointer;font-size:13px;padding:0 2px;flex-shrink:0;line-height:1;transition:color .15s;}
+.entry-remove-btn:hover{color:var(--terracotta);}
+.minus-btn{order:1;}
+
+/* Total */
+.total-section{background:linear-gradient(135deg,#2c1a0e,#4a2c18);border-radius:6px;padding:26px 30px;box-shadow:0 4px 24px rgba(44,26,14,.2);}
+.total-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.total-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:rgba(245,240,232,.75);}
+.total-row.indent{padding-left:12px;font-size:12px;}
+.total-row.cat-header{color:rgba(201,168,76,.7);font-size:11px;letter-spacing:.1em;margin-top:6px;}
+.summary-bar{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(201,168,76,.2);border-radius:3px;padding:9px 15px;margin-bottom:6px;}
+.summary-bar .sl{font-size:12px;letter-spacing:.1em;color:rgba(245,240,232,.6);}
+.summary-bar .sv{font-family:'Noto Serif TC',serif;font-size:14px;color:var(--cream);font-weight:500;}
+.total-final{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid rgba(201,168,76,.4);padding-top:14px;margin-top:6px;}
+.total-final .tfl{font-family:'Noto Serif TC',serif;font-style:italic;color:var(--gold);font-size:16px;letter-spacing:.08em;}
+.total-final .tfa{font-family:'Noto Serif TC',serif;font-size:28px;color:var(--gold);}
+.total-final .tfa small{font-size:14px;margin-left:4px;}
+.total-note{font-size:11px;color:rgba(245,240,232,.4);margin-top:10px;text-align:right;letter-spacing:.05em;}
+.btn-submit{width:100%;background:var(--gold);border:none;border-radius:3px;color:var(--espresso);cursor:pointer;font-family:'Noto Serif TC',serif;font-size:16px;font-style:italic;font-weight:700;letter-spacing:.1em;padding:15px;margin-top:18px;transition:all .25s;box-shadow:0 4px 16px rgba(201,168,76,.35);}
+.btn-submit:hover{background:#d9b85c;transform:translateY(-1px);box-shadow:0 6px 22px rgba(201,168,76,.45);}
+.btn-export{width:100%;background:none;border:1px solid rgba(201,168,76,.4);border-radius:3px;color:var(--gold);cursor:pointer;font-family:'Noto Serif TC',serif;font-size:13px;letter-spacing:.1em;padding:11px;margin-top:10px;transition:all .25s;}
+.btn-export:hover{background:rgba(201,168,76,.12);border-color:var(--gold);}
+
+/* Notice bar */
+.notice-bar{display:flex;align-items:flex-start;gap:12px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.35);border-radius:4px;padding:14px 18px;margin-bottom:20px;}
+.notice-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.notice-text{font-size:13px;color:var(--bark);line-height:1.7;letter-spacing:.03em;}
+.notice-text strong{color:var(--red-deep);font-weight:600;}
+
+/* Locked reservation info (QR code mode) */
+.res-locked-val{color:var(--cream);font-size:15px;font-weight:500;padding:9px 13px;background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.2);border-radius:3px;letter-spacing:.05em;}
+.locked-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--gold);letter-spacing:.1em;margin-bottom:14px;}
+
+/* Toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--espresso);color:var(--cream);padding:11px 24px;border-radius:3px;font-size:13px;letter-spacing:.08em;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media print{
+  body{background:#fff;padding:16px;}
+  .btn-add,.btn-remove,.btn-submit,.btn-export,.add-section,.qty-btn{display:none!important;}
+  .order-card,.alacarte-card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid;}
+  .total-section{background:#222!important;-webkit-print-color-adjust:exact;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Header -->
+<div class="header">
+  <div class="hline"><div class="l"></div><span style="color:var(--gold)">✦</span><div class="l r"></div></div>
+  <h1>今鶴義式餐酒館<br><em>大訂點餐表單</em></h1>
+  <p id="header-subtitle">請依序填寫訂位資訊、每位用餐者主餐，以及單點加點</p>
+</div>
+
+<!-- Reservation -->
+<div class="reservation-card">
+  <div class="section-title">✦ 訂位資訊</div>
+  <!-- 鎖定模式（客人掃碼）：顯示唯讀訂位資訊 -->
+  <div id="res-locked" style="display:none;">
+    <div class="res-grid">
+      <div>
+        <div class="res-label">訂位人姓名</div>
+        <div class="res-locked-val" id="locked-name"></div>
+      </div>
+      <div>
+        <div class="res-label">用餐日期</div>
+        <div class="res-locked-val" id="locked-date"></div>
+      </div>
+      <div>
+        <div class="res-label">用餐時段</div>
+        <div class="res-locked-val" id="locked-time"></div>
+      </div>
+      <div>
+        <div class="res-label">用餐人數</div>
+        <div class="res-locked-val" id="locked-pax"></div>
+      </div>
+      <div class="span2">
+        <div class="res-label">今鶴會員身份</div>
+        <div class="res-locked-val" id="locked-member"></div>
+      </div>
+    </div>
+  </div>
+  <!-- 一般模式（統整填寫）：可編輯 -->
+  <div id="res-editable">
+    <div class="res-grid">
+      <div class="span2">
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;">
+          <div>
+            <div class="res-label">訂位人姓名 <span style="color:var(--gold)">✦</span></div>
+            <input type="text" class="res-input" id="res-name" placeholder="請輸入訂位人姓名"/>
+          </div>
+          <div>
+            <div class="res-label">大人 <span style="color:var(--gold)">✦</span></div>
+            <input type="number" class="res-input" id="res-adult" placeholder="例：8" min="0" max="200" oninput="syncPax()"/>
+          </div>
+          <div>
+            <div class="res-label">小孩 <span style="color:var(--gold)">（選填）</span></div>
+            <input type="number" class="res-input" id="res-child" placeholder="例：2" min="0" max="200" oninput="syncPax()"/>
+          </div>
+        </div>
+        <div style="display:none;">
+          <input type="number" id="res-pax" min="0"/>
+        </div>
+      </div>
+      <div class="span2">
+        <div class="res-label">用餐日期與時段 <span style="color:var(--gold)">✦</span></div>
+        <div class="res-date-row">
+          <div class="sw">
+            <select class="res-select" id="res-date" onchange="buildTimeOptions()">
+              <option value="">── 選擇日期 ──</option>
+            </select>
+          </div>
+          <div class="sw">
+            <select class="res-select" id="res-time"><option value="">── 先選日期 ──</option></select>
+          </div>
+        </div>
+        <div class="res-note">週一～五 10:30–19:30 ／ 週六日 10:00–19:30（整點及半點）</div>
+      </div>
+      <div class="span2">
+        <div class="res-label">今鶴會員身份 <span style="color:var(--gold)">✦</span></div>
+        <div class="sw">
+          <select class="res-select" id="res-member" onchange="onMemberChange()">
+            <option value="none">不需入會</option>
+            <option value="new">用餐當日 $100 入會（享會員價）</option>
+            <option value="existing">已有舊會員（享會員價）</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Guest cards -->
+<div class="section-title" id="guest-section-title" style="margin-bottom:16px;">✦ 個人點餐區塊</div>
+
+<!-- 低消提醒 -->
+<div class="notice-bar">
+  <span class="notice-icon">📋</span>
+  <div class="notice-text">每位用餐者低消為<strong>主餐或單點飲品一份</strong>（前菜、經典小品、甜點等不計入低消），5 歲以下幼兒不受低消限制，感謝您的合作 🙏</div>
+</div>
+
+<div id="cards-container"></div>
+<div class="add-section" id="add-btn-section">
+  <button class="btn-add" onclick="addCard()"><span class="plus">＋</span> 新增用餐人</button>
+</div>
+
+<!-- 單點區塊 -->
+<div class="section-title" style="margin-bottom:16px;">✦ 單點區塊</div>
+<div class="alacarte-card">
+  <div class="card-accent"></div>
+  <div class="alacarte-header">
+    <span class="alacarte-title">✦ 沙拉・前菜・小品・甜點・飲品</span>
+    <span class="alacarte-subtotal">小計：<span id="alacarte-sub">$0</span></span>
+  </div>
+  <div class="alacarte-body" id="alacarte-body"></div>
+</div>
+
+<!-- Total -->
+<div class="total-section">
+  <div class="section-title">✦ 金額試算</div>
+  <div class="total-rows" id="total-rows">
+    <div class="total-row" style="color:rgba(245,240,232,.4);font-style:italic;">尚未新增餐點</div>
+  </div>
+  <div class="summary-bar"><span class="sl">個人主餐小計</span><span class="sv" id="main-sub-display">$0</span></div>
+  <div class="summary-bar"><span class="sl">單點小計</span><span class="sv" id="alacarte-sub-display">$0</span></div>
+  <div class="summary-bar" id="member-fee-bar" style="display:none;"><span class="sl">入會費（不計服務費）</span><span class="sv">$100</span></div>
+  <div class="summary-bar"><span class="sl">餐點小計</span><span class="sv" id="subtotal-display">$0</span></div>
+  <div class="summary-bar"><span class="sl">服務費 10%</span><span class="sv" id="service-display">$0</span></div>
+  <div class="total-final">
+    <span class="tfl">預估總計</span>
+    <div class="tfa" id="total-display">$0 <small>元</small></div>
+  </div>
+  <div class="total-note">★ 金額依實際點餐及會員折扣為準 ★</div>
+  <button class="btn-submit" onclick="submitOrder()">確認送出點餐單</button>
+  <button class="btn-export" onclick="exportCSV()">⬇ 匯出為 CSV 試算表</button>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// MENU DATA
+// ═══════════════════════════════════════════════════
+const MAINS={
+  pasta:{label:'🍝 義大利麵 Pasta',items:[
+    {name:'慢烤蒜酥小羔羊金沙辣奶油義大利麵🌶',m:660,r:720},
+    {name:'炙燒干貝海鮮番紅花米蘭醬義大利麵',m:600,r:660},
+    {name:'香煎櫻桃鴨松露奶油醬義大利麵',m:480,r:540},
+    {name:'伊比利蒜香慢烤豬濃郁椒香麻奶義大利麵🌶',m:660,r:720},
+    {name:'安格斯黑牛香蒜辣炒義大利麵🌶',m:450,r:510},
+    {name:'爐烤雞腿香蒜辣炒義大利麵🌶',m:360,r:420},
+    {name:'七股蛤蜊法式白酒清炒義大利麵🌶',m:360,r:420},
+    {name:'挪威鮭魚香蒜辣炒義大利麵🌶',m:390,r:450},
+    {name:'爐烤雞腿北海道奶油義大利麵',m:360,r:420},
+    {name:'安格斯黑牛地中海茄汁義大利麵',m:450,r:510},
+    {name:'安格斯黑牛濃郁椒香麻奶義大利麵🌶',m:450,r:510},
+    {name:'海鮮總匯菠菜青醬義大利麵',m:390,r:450},
+    {name:'七股蛤蜊煙花女義大利麵🌶',m:360,r:420},
+    {name:'酥炸魚排菠菜青醬義大利麵',m:360,r:420},
+    {name:'半熟蛋黑松露蘑菇義大利麵 🥚',m:360,r:420},
+  ]},
+  risotto:{label:'🍚 燉飯 Risotto',items:[
+    {name:'慢烤蒜酥小羔羊番紅花米蘭醬燉飯',m:720,r:780},
+    {name:'伊比利蒜香慢烤豬番紅花米蘭醬燉飯',m:720,r:780},
+    {name:'乾煎杏鮑菇番紅花米蘭醬燉飯 🥚',m:450,r:510},
+    {name:'炙烤骰子牛菠菜青醬燉飯',m:450,r:510},
+    {name:'燜烤海量蛤蜊菠菜青醬燉飯',m:450,r:510},
+    {name:'炙烤焦糖鮭魚北海道奶油燉飯',m:390,r:450},
+    {name:'爐烤雞腿北海道奶油燉飯',m:360,r:420},
+    {name:'海鮮總匯北海道奶油燉飯',m:390,r:450},
+    {name:'酥炸牡蠣金沙辣奶油燉飯🌶',m:420,r:480},
+    {name:'醬烤戰斧豬黑松露蘑菇燉飯',m:570,r:630},
+    {name:'嫩煎鮮蝦干貝濃郁南瓜燉飯',m:510,r:570},
+    {name:'安格斯黑牛黃金起司燉飯',m:450,r:510},
+    {name:'爐烤雞腿黃金起司燉飯',m:360,r:420},
+    {name:'酥炸魚排香辣墨魚燉飯🌶',m:390,r:450},
+    {name:'半熟蛋牛肝菌燉飯 🥚',m:330,r:390},
+  ]},
+  brunch:{label:'🍳 早午餐 Brunch',items:[
+    {name:'和風醬燒梅子雞 ✦ 早午餐',m:420,r:480},
+    {name:'安格斯嫩煎牛排 ✦ 早午餐',m:450,r:510},
+    {name:'歐風蜜香炙烤雞腿 ✦ 早午餐',m:390,r:450},
+    {name:'蔥鹽蒜炒雞松阪 ✦ 早午餐',m:420,r:480},
+    {name:'起司奶油鮮蔬燉菜 ✦ 早午餐 🥚',m:390,r:450},
+    {name:'北海道奶油海鮮燉菜 ✦ 早午餐',m:420,r:480},
+    {name:'伊比利慢烤豬酥脆三明治 ✦ 早午餐',m:450,r:510},
+    {name:'煙燻鮭魚酥脆三明治 ✦ 早午餐',m:390,r:450},
+    {name:'乾煎培根酥脆三明治 ✦ 早午餐',m:360,r:420},
+  ]},
+  pizza:{label:'🍕 披薩 Pizza',items:[
+    {name:'松露野菇起司半熟蛋 🥚',m:390,r:450},
+    {name:'伊比利蒜香慢烤豬',m:420,r:480},
+    {name:'經典瑪格麗特 🥚',m:360,r:420},
+  ]}
+};
+
+const SET_MEALS={
+  A:{name:'A 經典套餐',extra:150,desc:'湯品 ＋ 麵包 ＋ 任選飲品折抵 $80'},
+  B:{name:'B 甜點套餐',extra:120,desc:'今日甜點 ＋ 任選飲品折抵 $80'},
+  C:{name:'C 湯品套餐',extra:120,desc:'湯品 ＋ 任選飲品折抵 $80'},
+};
+
+// SET_DISCOUNT applied per drink when choosing set meal drink
+const SET_DISCOUNT=80;
+
+// ─── DRINK DEFINITIONS ───────────────────────────
+// opts: array of option-group objects {label, choices:[{key,label}]}
+// fixed: string note shown instead of opts
+// price: full menu price
+
+const SWEETNESS_OPTS={label:'甜度',choices:[{k:'無糖',l:'無糖'},{k:'三分糖',l:'三分糖'},{k:'五分糖',l:'五分糖'},{k:'七分糖',l:'七分糖'},{k:'全糖',l:'全糖'}]};
+const TEMP_ICE_WARM={label:'溫度',choices:[{k:'冰',l:'冰'},{k:'去冰',l:'去冰'},{k:'熱',l:'熱'}]};
+const TEMP_ICE_HOT={label:'溫度',choices:[{k:'冰',l:'冰'},{k:'熱',l:'熱'}]};
+const ICE_OPTS={label:'冰量',choices:[{k:'冰',l:'冰'},{k:'去冰',l:'去冰'}]};
+const STYLED_SHAPE={label:'造型',choices:[{k:'立體泡澡熊',l:'立體泡澡熊'},{k:'柴犬棉花糖',l:'柴犬棉花糖'}]};
+
+// Full drink catalogue (used in individual add-on + set-meal selector)
+const DRINK_CATS=[
+  {cat:'造型飲品 Styled Drinks',drinks:[
+    {id:'s01',name:'沖繩黑糖珍珠鮮奶茶',price:175,fixedNote:'固定甜度冰量',opts:[STYLED_SHAPE]},
+    {id:'s02',name:'沖繩黑糖鮮奶茶',price:165,opts:[STYLED_SHAPE,TEMP_ICE_HOT]},
+    {id:'s03',name:'寶寶歐蕾',price:185,opts:[STYLED_SHAPE,TEMP_ICE_HOT]},
+    {id:'s04',name:'白桃烏龍鮮奶茶',price:195,opts:[STYLED_SHAPE,TEMP_ICE_HOT]},
+    {id:'s05',name:'經典拿鐵（造型）',price:175,opts:[STYLED_SHAPE,TEMP_ICE_HOT]},
+    {id:'s06',name:'焦糖拿鐵（造型）',price:185,opts:[STYLED_SHAPE,TEMP_ICE_HOT]},
+  ]},
+  {cat:'精選茶 Selected Teas',drinks:[
+    {id:'t01',name:'四季青茶',price:80,opts:[SWEETNESS_OPTS,TEMP_ICE_WARM]},
+    {id:'t02',name:'阿薩姆紅茶',price:80,opts:[SWEETNESS_OPTS,TEMP_ICE_WARM]},
+    {id:'t03',name:'茉莉綠茶',price:80,opts:[SWEETNESS_OPTS,TEMP_ICE_WARM]},
+    {id:'t04',name:'白桃烏龍茶',price:110,opts:[SWEETNESS_OPTS,TEMP_ICE_WARM]},
+  ]},
+  {cat:'義式咖啡 Italian Coffee',drinks:[
+    {id:'c01',name:'經典拿鐵',price:110,opts:[TEMP_ICE_WARM],fixedNote:'固定無糖'},
+    {id:'c02',name:'美式咖啡',price:80,opts:[TEMP_ICE_WARM],fixedNote:'固定無糖'},
+    {id:'c03',name:'紅心芭樂美式（冰）',price:110,fixed:'固定甜度冰量'},
+    {id:'c04',name:'西西里氣泡咖啡（冰）',price:120,fixed:'固定甜度冰量'},
+    {id:'c05',name:'焦糖拿鐵',price:120,opts:[TEMP_ICE_WARM]},
+  ]},
+  {cat:'歐蕾系列 Milk Tea Series',drinks:[
+    {id:'e01',name:'沖繩黑糖珍珠鮮奶茶',price:110,fixed:'固定甜度冰量'},
+    {id:'e02',name:'沖繩黑糖鮮奶茶',price:100,opts:[TEMP_ICE_WARM]},
+    {id:'e03',name:'寶寶歐蕾',price:120,opts:[TEMP_ICE_WARM]},
+    {id:'e04',name:'白桃烏龍鮮奶茶',price:130,opts:[{label:'溫度',choices:[{k:'冰（固定一分糖）',l:'冰（固定一分糖）'},{k:'熱（固定無糖）',l:'熱（固定無糖）'}]}]},
+    {id:'e05',name:'TWG法式伯爵鮮奶茶（壺裝無糖）',price:190,opts:[{label:'溫度',choices:[{k:'去冰',l:'去冰'},{k:'熱',l:'熱'}]}]},
+    {id:'e06',name:'TWG焦糖奶油鮮奶茶（壺裝無糖）',price:190,opts:[{label:'溫度',choices:[{k:'去冰',l:'去冰'},{k:'熱',l:'熱'}]}]},
+  ]},
+  {cat:'享特調 House Specials',drinks:[
+    {id:'h01',name:'白桃柚香烏龍',price:120,fixed:'固定甜度冰量'},
+    {id:'h02',name:'白桃蘋果紅茶',price:120,fixed:'固定甜度冰量'},
+    {id:'h03',name:'芭樂蜂蜜青茶',price:130,fixed:'固定甜度冰量'},
+  ]},
+  {cat:'氣泡飲 Sparkling',drinks:[
+    {id:'sp01',name:'冰山美人氣泡飲',price:130,fixed:'固定甜度冰量'},
+    {id:'sp02',name:'紅心芭樂乳酸氣泡飲',price:130,fixed:'固定甜度冰量'},
+    {id:'sp03',name:'蜂蜜檸檬氣泡飲',price:100,fixed:'固定甜度冰量'},
+  ]},
+  {cat:'果汁 Fresh Juices',drinks:[
+    {id:'j01',name:'青森蘋果果汁',price:150,opts:[ICE_OPTS]},
+  ]},
+  {cat:'汽水 Soft Drinks',drinks:[
+    {id:'sd01',name:'可樂',price:80,fixed:'固定冰'},
+    {id:'sd02',name:'雪碧',price:80,fixed:'固定冰'},
+  ]},
+  {cat:'沖泡茶 Brewed Teas',drinks:[
+    {id:'b01',name:'黑醋栗花果茶（熱）',price:150,fixed:'熱飲'},
+    {id:'b02',name:'TWG法式伯爵茶（熱）',price:160,fixed:'熱飲'},
+    {id:'b03',name:'TWG焦糖奶油茶（熱）',price:160,fixed:'熱飲'},
+  ]},
+];
+
+// Flat lookup by id
+const DRINK_BY_ID={};
+DRINK_CATS.forEach(cat=>cat.drinks.forEach(d=>{DRINK_BY_ID[d.id]=d;}));
+
+// Build flat list for set-meal select
+function allDrinksFlat(){
+  const arr=[];
+  DRINK_CATS.forEach(cat=>cat.drinks.forEach(d=>arr.push({...d,catLabel:cat.cat})));
+  return arr;
+}
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+let cardCount=0;
+const cardData={};
+const alacarteQty={};
+// alacarteOpts[key] = {optLabel: selectedValue, ...}
+const alacarteOpts={};
+
+// ═══════════════════════════════════════════════════
+// DATE/TIME
+// ═══════════════════════════════════════════════════
+function buildDateOptions(){
+  const sel=document.getElementById('res-date');
+  const now=new Date();
+  // 台灣時間（UTC+8）
+  const twNow=new Date(now.getTime()+8*60*60*1000);
+  const twH=twNow.getUTCHours();
+  const twM=twNow.getUTCMinutes();
+  const currentMinutes=twH*60+twM;
+  const days=['日','一','二','三','四','五','六'];
+
+  // 以台灣今天為基準
+  const twToday=new Date(twNow.getUTCFullYear(),twNow.getUTCMonth(),twNow.getUTCDate());
+  const dow=twToday.getDay();
+  const isWeekend=(dow===0||dow===6);
+  // 今日最後時段（分鐘數）：19:30 = 1170
+  const lastSlot=19*60+30;
+  // 今日第一時段
+  const firstSlot=isWeekend?10*60:10*60+30;
+  // 如果現在已超過今日最後時段，從明天開始
+  const startOffset=(currentMinutes>=lastSlot)?1:0;
+
+  sel.innerHTML='<option value="">── 選擇日期 ──</option>';
+  // 顯示 45 天（約 1.5 個月）
+  for(let i=startOffset;i<startOffset+45;i++){
+    const d=new Date(twToday);
+    d.setDate(twToday.getDate()+i);
+    const y=d.getFullYear();
+    const mo=String(d.getMonth()+1).padStart(2,'0');
+    const dy=String(d.getDate()).padStart(2,'0');
+    const dw=d.getDay();
+    const label=`${y}/${mo}/${dy} (週${days[dw]})`;
+    const val=`${y}-${mo}-${dy}_${dw}`;
+    const opt=document.createElement('option');
+    opt.value=val;opt.textContent=label;
+    sel.appendChild(opt);
+  }
+}
+
+function buildTimeOptions(){
+  const dateVal=document.getElementById('res-date').value;
+  const timeSel=document.getElementById('res-time');
+  timeSel.innerHTML='<option value="">── 選擇時段 ──</option>';
+  if(!dateVal)return;
+
+  const dow=parseInt(dateVal.split('_')[1]);
+  const isWeekend=(dow===0||dow===6);
+
+  // 判斷是否為今天（台灣時間）
+  const now=new Date();
+  const twNow=new Date(now.getTime()+8*60*60*1000);
+  const twTodayStr=`${twNow.getUTCFullYear()}-${String(twNow.getUTCMonth()+1).padStart(2,'0')}-${String(twNow.getUTCDate()).padStart(2,'0')}`;
+  const selectedDateStr=dateVal.split('_')[0];
+  const isToday=(selectedDateStr===twTodayStr);
+
+  // 現在台灣時間（分鐘）
+  const currentMinutes=twNow.getUTCHours()*60+twNow.getUTCMinutes();
+
+  let h=isWeekend?10:10, m=isWeekend?0:30;
+  let hasSlot=false;
+  while(h<19||(h===19&&m<=30)){
+    const slotMinutes=h*60+m;
+    const str=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+    // 如果是今天，只顯示尚未過去的時段（保留至少30分鐘緩衝）
+    if(!isToday||slotMinutes>currentMinutes+30){
+      const opt=document.createElement('option');
+      opt.value=str;opt.textContent=str;
+      timeSel.appendChild(opt);
+      hasSlot=true;
+    }
+    m+=30;if(m>=60){m=0;h++;}
+  }
+  // 如果今天已無可用時段（理論上不會出現，因為 buildDateOptions 已過濾）
+  if(!hasSlot){
+    timeSel.innerHTML='<option value="">今日已無可用時段</option>';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// BUILD DRINK OPTION WIDGETS (inline small selects)
+// ═══════════════════════════════════════════════════
+function drinkOptsHTML(drink,prefix){
+  // fixed: show note only, no selects
+  if(drink.fixed){
+    return `<span class="drink-fixed-note">📌 ${drink.fixed}</span>`;
+  }
+  let html='';
+  // fixedNote: show note AND render opts selects below
+  if(drink.fixedNote){
+    html+=`<span class="drink-fixed-note">📌 ${drink.fixedNote}</span>`;
+  }
+  if(!drink.opts||drink.opts.length===0)return html;
+  html+='<div class="drink-opts-row">';
+  drink.opts.forEach(og=>{
+    html+=`<div class="svw"><select class="ms" id="${prefix}_${og.label}" onchange="onDrinkOptChange('${prefix}')">`;
+    html+=`<option value="">── ${og.label} ──</option>`;
+    og.choices.forEach(c=>{html+=`<option value="${c.k}">${c.l}</option>`;});
+    html+='</select></div>';
+  });
+  html+='</div>';
+  return html;
+}
+
+function onDrinkOptChange(prefix){updateTotal();}
+
+function getDrinkOptStr(drink,prefix){
+  if(drink.fixed)return drink.fixed;
+  if(!drink.opts||drink.opts.length===0)return drink.fixedNote||'';
+  const optsStr=drink.opts.map(og=>{
+    const el=document.getElementById(`${prefix}_${og.label}`);
+    return el&&el.value?el.value:'';
+  }).filter(Boolean).join('／');
+  return drink.fixedNote?`${drink.fixedNote}／${optsStr}`:optsStr;
+}
+
+// ═══════════════════════════════════════════════════
+// BUILD MAIN SELECT
+// ═══════════════════════════════════════════════════
+function buildMainOptions(){
+  let h='<option value="">── 請選擇主餐 ──</option>';
+  for(const[key,cat]of Object.entries(MAINS)){
+    h+=`<optgroup label="${cat.label}">`;
+    cat.items.forEach((item,i)=>{
+      const v=JSON.stringify({key,i});
+      h+=`<option value='${v}'>${item.name}　（會員$${item.m}／一般$${item.r}）</option>`;
+    });
+    h+='</optgroup>';
+  }
+  return h;
+}
+function buildSetOptions(){
+  let h='<option value="">不加套餐</option>';
+  for(const[k,s]of Object.entries(SET_MEALS)){
+    h+=`<option value="${k}">${s.name}　加 +$${s.extra}</option>`;
+  }
+  return h;
+}
+
+// Set-meal drink select (shows after-discount price)
+function buildSetDrinkOptions(){
+  let h='<option value="">── 請選擇飲料（折抵$80）──</option>';
+  DRINK_CATS.forEach(cat=>{
+    h+=`<optgroup label="▸ ${cat.cat}">`;
+    cat.drinks.forEach(d=>{
+      const net=Math.max(0,d.price-SET_DISCOUNT);
+      h+=`<option value="${d.id}">${d.name}　＋$${net}</option>`;
+    });
+    h+='</optgroup>';
+  });
+  return h;
+}
+
+// Individual add-on drink select (full price)
+function buildIndivDrinkOptions(){
+  let h='<option value="">不另加飲品</option>';
+  DRINK_CATS.forEach(cat=>{
+    h+=`<optgroup label="▸ ${cat.cat}">`;
+    cat.drinks.forEach(d=>{
+      h+=`<option value="${d.id}">${d.name}　$${d.price}</option>`;
+    });
+    h+='</optgroup>';
+  });
+  return h;
+}
+
+// ═══════════════════════════════════════════════════
+// ADD CARD
+// ═══════════════════════════════════════════════════
+function isMember(){return document.getElementById('res-member').value!=='none';}
+
+function addCard(){
+  cardCount++;
+  const id=cardCount;
+  cardData[id]={mainPrice:0,setExtra:0,setDrinkNet:0,indivDrinkPrice:0};
+  const container=document.getElementById('cards-container');
+  const div=document.createElement('div');
+  div.className='order-card';div.id=`card-${id}`;
+  div.innerHTML=`
+    <div class="card-accent"></div>
+    <div class="card-header">
+      <span class="card-number">Guest No. ${String(id).padStart(2,'0')}</span>
+      <span class="card-subtotal">小計：<span id="sub-${id}">$0</span> <span style="font-size:10px;color:rgba(92,61,46,.45);font-weight:400;letter-spacing:.03em;">（10%服務費另計）</span></span>
+      <button class="btn-remove" onclick="removeCard(${id})">移除</button>
+    </div>
+    <div class="card-body">
+      <!-- 暱稱 -->
+      <div class="field-group">
+        <label class="field-label">暱稱 <span class="req">✦</span></label>
+        <input type="text" id="name-${id}" placeholder="請輸入您的暱稱"/>
+      </div>
+      <div class="divider"></div>
+      <!-- 主餐 -->
+      <div class="field-group">
+        <label class="field-label">主餐 <span class="req">✦</span></label>
+        <div class="svw"><select class="ms" id="main-${id}" onchange="onMainChange(${id})">${buildMainOptions()}</select></div>
+        <span class="price-tag" id="mpt-${id}"></span>
+      </div>
+      <div class="divider"></div>
+      <!-- 套餐 -->
+      <div class="set-box">
+        <div class="set-box-title">套餐加購　<span style="color:var(--sage);font-style:italic;">選填，飲品折抵 $80</span></div>
+        <div class="set-row">
+          <div class="field-group">
+            <label class="field-label">套餐 <span class="opt">（選填）</span></label>
+            <div class="svw"><select class="ms" id="set-${id}" onchange="onSetChange(${id})">${buildSetOptions()}</select></div>
+            <span class="set-desc" id="sdesc-${id}"></span>
+          </div>
+          <div class="field-group drink-field" id="df-${id}">
+            <label class="field-label">套餐飲料 <span class="req">✦</span></label>
+            <div class="svw"><select class="ms" id="setdrink-${id}" onchange="onSetDrinkChange(${id})">${buildSetDrinkOptions()}</select></div>
+            <span class="price-tag" id="sdpt-${id}"></span>
+            <div id="sdopts-${id}"></div>
+          </div>
+        </div>
+      </div>
+      <!-- 單點飲品 -->
+      <div class="indiv-drink-box">
+        <div class="indiv-drink-box-title">單點飲品　<span style="color:var(--sage);font-style:italic;">選填，另計全額</span></div>
+        <div class="field-group">
+          <label class="field-label">飲品 <span class="opt">（選填）</span></label>
+          <div class="svw"><select class="ms" id="idrink-${id}" onchange="onIndivDrinkChange(${id})">${buildIndivDrinkOptions()}</select></div>
+          <span class="price-tag" id="idpt-${id}"></span>
+          <div id="idopts-${id}"></div>
+        </div>
+      </div>
+    </div>`;
+  container.appendChild(div);
+  div.scrollIntoView({behavior:'smooth',block:'center'});
+  updateTotal();
+}
+
+function removeCard(id){
+  const el=document.getElementById(`card-${id}`);
+  if(!el)return;
+  el.style.transition='opacity .25s,transform .25s';el.style.opacity='0';el.style.transform='translateY(-8px)';
+  setTimeout(()=>{el.remove();delete cardData[id];updateTotal();},250);
+}
+
+// ═══════════════════════════════════════════════════
+// CARD CHANGE HANDLERS
+// ═══════════════════════════════════════════════════
+function onMainChange(id){
+  const val=document.getElementById(`main-${id}`).value;
+  const tag=document.getElementById(`mpt-${id}`);
+  if(!val){cardData[id].mainPrice=0;tag.textContent='';}
+  else{
+    const{key,i}=JSON.parse(val);const item=MAINS[key].items[i];
+    const member=isMember();const price=member?item.m:item.r;
+    cardData[id].mainPrice=price;
+    tag.textContent=member?`會員價 $${item.m}（一般 $${item.r}）`:`一般價 $${item.r}`;
+  }
+  updateCardSub(id);updateTotal();
+}
+
+function onSetChange(id){
+  const val=document.getElementById(`set-${id}`).value;
+  const descEl=document.getElementById(`sdesc-${id}`);
+  const df=document.getElementById(`df-${id}`);
+  if(!val){
+    cardData[id].setExtra=0;cardData[id].setDrinkNet=0;
+    descEl.textContent='';df.classList.remove('visible');
+    document.getElementById(`sdpt-${id}`).textContent='';
+    document.getElementById(`sdopts-${id}`).innerHTML='';
+  }else{
+    const s=SET_MEALS[val];cardData[id].setExtra=s.extra;
+    descEl.textContent=s.desc;df.classList.add('visible');
+    document.getElementById(`setdrink-${id}`).value='';
+    cardData[id].setDrinkNet=0;
+    document.getElementById(`sdpt-${id}`).textContent='';
+    document.getElementById(`sdopts-${id}`).innerHTML='';
+  }
+  updateCardSub(id);updateTotal();
+}
+
+function onSetDrinkChange(id){
+  const val=document.getElementById(`setdrink-${id}`).value;
+  const tag=document.getElementById(`sdpt-${id}`);
+  const optsDiv=document.getElementById(`sdopts-${id}`);
+  if(!val){
+    cardData[id].setDrinkNet=0;tag.textContent='';optsDiv.innerHTML='';
+  }else{
+    const d=DRINK_BY_ID[val];
+    const net=Math.max(0,d.price-SET_DISCOUNT);
+    cardData[id].setDrinkNet=net;
+    tag.textContent=`定價 $${d.price}，折抵後 +$${net}`;
+    optsDiv.innerHTML=drinkOptsHTML(d,`sdopt_${id}`);
+  }
+  updateCardSub(id);updateTotal();
+}
+
+function onIndivDrinkChange(id){
+  const val=document.getElementById(`idrink-${id}`).value;
+  const tag=document.getElementById(`idpt-${id}`);
+  const optsDiv=document.getElementById(`idopts-${id}`);
+  if(!val){
+    cardData[id].indivDrinkPrice=0;tag.textContent='';optsDiv.innerHTML='';
+  }else{
+    const d=DRINK_BY_ID[val];
+    cardData[id].indivDrinkPrice=d.price;
+    tag.textContent=`$${d.price}`;
+    optsDiv.innerHTML=drinkOptsHTML(d,`idopt_${id}`);
+  }
+  updateCardSub(id);updateTotal();
+}
+
+function updateCardSub(id){
+  const d=cardData[id];
+  document.getElementById(`sub-${id}`).textContent=`$${d.mainPrice+d.setExtra+d.setDrinkNet+d.indivDrinkPrice}`;
+}
+
+// ═══════════════════════════════════════════════════
+// SINGLE-ORDER (單點) BUILD
+// ═══════════════════════════════════════════════════
+const ALACARTE_CATS=[
+  {cat:'沙拉 Salad',hasDressing:true,items:[
+    {name:'煙燻鮭魚生菜沙拉',price:330},
+    {name:'酪梨鮮蝦沙拉',price:330},
+    {name:'七股炸牡蠣沙拉',price:330},
+  ]},
+  {cat:'特色前菜 Appetizer',items:[
+    {name:'炙烤焦糖鮭魚蒔蘿奶酪捲',price:300},
+    {name:'油封蒜油馬鈴薯蝦滑',price:240},
+    {name:'西西里肉醬嫩蛋',price:240},
+    {name:'香煎薄鹽櫛瓜與帕瑪森起司 🥚',price:210},
+    {name:'火山奶油雞翅🌶',price:270},
+    {name:'今鶴家唐揚雞',price:240},
+    {name:'義式肉醬脆皮餃',price:240},
+    {name:'法式脆薯佐松露奶醬',price:240},
+  ]},
+  {cat:'披薩 Pizza',items:[
+    {name:'松露野菇起司半熟蛋 🥚',price:390,memberPrice:390},
+    {name:'伊比利蒜香慢烤豬',price:420,memberPrice:420},
+    {name:'經典瑪格麗特 🥚',price:360,memberPrice:360},
+  ]},
+  {cat:'經典小品 Classic Bites',items:[
+    {name:'酥炸脆薯',price:120},
+    {name:'招牌濃湯',price:90},
+    {name:'硬式法國麵包（2片）',price:60},
+    {name:'今鶴楓糖可頌',price:60},
+    {name:'今日甜點',price:60},
+    {name:'堅果優格',price:60},
+  ]},
+  {cat:'甜點 Dessert',items:[
+    {name:'熔岩流沙鹹蛋黃 ✦ 舒芙蕾',price:270},
+    {name:'黑糖珍珠厚奶茶 ✦ 舒芙蕾',price:240},
+    {name:'烤布蕾法式吐司',price:210},
+  ]},
+  {cat:'🐾 毛孩餐 Pet Menu',isPetMenu:true,items:[
+    {name:'毛孩愛吃雞胸肉（雞胸130g、花椰菜、水煮蛋、寵物奶）',price:240,memberPrice:210},
+    {name:'毛孩愛吃舒肥牛（舒肥牛排130g、花椰菜、水煮蛋、寵物奶）',price:300,memberPrice:270},
+  ]},
+  // Drinks from DRINK_CATS (rendered separately below)
+];
+
+// ─── Per-item sub-entry storage ──────────────────────────────────────────────
+// alacarteEntries[key] = [ {opts:{label:val,...}}, ... ]  one object per unit
+const alacarteEntries={};
+
+// Does this item need per-unit option selects?
+function itemNeedsPerUnit(cat,drink){
+  if(cat&&cat.hasDressing)return true;
+  if(drink&&!drink.fixed&&drink.opts&&drink.opts.length>0)return true;
+  return false;
+}
+
+// Build the option selects HTML for one sub-entry
+function subEntryOptsHTML(drink,cat,entryId){
+  let html='';
+  if(cat&&cat.hasDressing){
+    html+=`<div class="item-opts-row"><div class="svw">
+      <select class="ms" id="${entryId}_dressing" onchange="updateTotal()">
+        <option value="">── 醬料 ──</option>
+        <option value="胡麻醬">胡麻醬</option>
+        <option value="油醋醬">油醋醬</option>
+      </select></div></div>`;
+  }
+  if(drink){
+    if(drink.fixedNote) html+=`<span class="item-fixed-note">📌 ${drink.fixedNote}</span>`;
+    if(drink.fixed)     html+=`<span class="item-fixed-note">📌 ${drink.fixed}</span>`;
+    if(drink.opts&&drink.opts.length>0){
+      html+='<div class="item-opts-row">';
+      drink.opts.forEach(og=>{
+        html+=`<div class="svw"><select class="ms" id="${entryId}_${og.label}" onchange="updateTotal()">
+          <option value="">── ${og.label} ──</option>`;
+        og.choices.forEach(c=>{html+=`<option value="${c.k}">${c.l}</option>`;});
+        html+='</select></div>';
+      });
+      html+='</div>';
+    }
+  }
+  return html;
+}
+
+// Render the list of sub-entries for a key (each has its own opts + remove btn)
+function renderSubEntries(key,price,drink,cat){
+  const entries=alacarteEntries[key]||[];
+  const container=document.getElementById(`entries-${key}`);
+  if(!container)return;
+  const needsPer=itemNeedsPerUnit(cat,drink);
+  let html='';
+  entries.forEach((e,idx)=>{
+    const entryId=`${key}_e${idx}`;
+    html+=`<div class="sub-entry" id="${entryId}_row">`;
+    if(needsPer){
+      html+=subEntryOptsHTML(drink,cat,entryId);
+    }
+    html+=`<button class="entry-remove-btn" onclick="removeEntry('${key}',${idx},${price},'${drink?'d':'f'}')">✕</button>`;
+    html+='</div>';
+  });
+  container.innerHTML=html;
+  // Restore saved select values
+  entries.forEach((e,idx)=>{
+    const entryId=`${key}_e${idx}`;
+    Object.keys(e).forEach(label=>{
+      const el=document.getElementById(`${entryId}_${label}`);
+      if(el)el.value=e[label];
+    });
+  });
+  // Update qty display and subtotal
+  document.getElementById(`qty-${key}`).textContent=entries.length;
+  const sub=entries.length*price;
+  document.getElementById(`isub-${key}`).textContent=sub>0?`$${sub}`:'';
+}
+
+function addEntry(key,price,drink,cat){
+  if(!alacarteEntries[key])alacarteEntries[key]=[];
+  alacarteEntries[key].push({});
+  renderSubEntries(key,price,drink,cat);
+  updateTotal();
+}
+
+function removeEntry(key,idx,price,type){
+  // Save current select values before removing
+  const entries=alacarteEntries[key]||[];
+  entries.forEach((e,i)=>{
+    const entryId=`${key}_e${i}`;
+    const saved={};
+    // collect all selects under this entry row
+    const row=document.getElementById(`${entryId}_row`);
+    if(row){row.querySelectorAll('select').forEach(sel=>{
+      const label=sel.id.replace(`${entryId}_`,'');
+      saved[label]=sel.value;
+    });}
+    entries[i]=saved;
+  });
+  entries.splice(idx,1);
+  alacarteEntries[key]=entries;
+  renderSubEntries(key,price,null,null);
+  // re-render with proper drink/cat refs by rebuilding (simple: just call updateTotal which reads entries)
+  // Need drink/cat to re-render opts — store refs
+  updateTotal();
+  // Rebuild entries container properly
+  const drinkRef=alacarteEntryMeta[key];
+  if(drinkRef)renderSubEntries(key,price,drinkRef.drink,drinkRef.cat);
+}
+
+// Store drink/cat meta per key for re-renders
+const alacarteEntryMeta={};
+
+function buildAlacarte(){
+  const body=document.getElementById('alacarte-body');
+  let html='';
+
+  // Food categories
+  ALACARTE_CATS.forEach((cat,ci)=>{
+    const isPet=!!cat.isPetMenu;
+    const catStyle=isPet?'border:1px solid rgba(184,92,56,.2);border-radius:4px;padding:12px 14px;background:rgba(184,92,56,.04);':'';
+    html+=`<div style="${catStyle}"><div class="alacarte-cat-title">${cat.cat}</div>`;
+    if(isPet){
+      html+=`<div style="font-size:11px;color:var(--sage);font-style:italic;margin-bottom:10px;">會員價 ／ 一般價（依訂位資訊會員身份自動套用）</div>`;
+    }
+    cat.items.forEach((item,ii)=>{
+      const key=`f_${ci}_${ii}`;
+      alacarteEntries[key]=[];
+      const needsPer=itemNeedsPerUnit(cat,null);
+      // Price label: pet shows both, others show single
+      const priceLabel=isPet
+        ?`<span class="item-price-label" id="plabel-${key}">$${item.memberPrice}<span style="color:rgba(92,61,46,.4);font-size:10px;"> ／ $${item.price}</span></span>`
+        :`<span class="item-price-label">$${item.price}</span>`;
+      html+=`<div class="item-row">
+        <div class="item-main-col">
+          <span class="item-name">${item.name}</span>
+          <div id="entries-${key}" class="sub-entries-container"></div>
+        </div>
+        ${priceLabel}
+        <div class="item-qty">
+          <button class="qty-btn" onclick="addEntry('${key}',getPetPrice(${ci},${ii}),null,ALACARTE_CATS[${ci}])">＋</button>
+          <span class="qty-num" id="qty-${key}">0</span>
+          <button class="qty-btn minus-btn" onclick="quickRemoveLast('${key}',getPetPrice(${ci},${ii}),null,ALACARTE_CATS[${ci}])">－</button>
+        </div>
+        <span class="item-subtotal" id="isub-${key}"></span>
+      </div>`;
+    });
+    html+='</div>';
+  });
+
+  // Drink categories
+  DRINK_CATS.forEach((cat,ci)=>{
+    html+=`<div><div class="alacarte-cat-title">${cat.cat}</div>`;
+    cat.drinks.forEach((drink,di)=>{
+      const key=`d_${ci}_${di}`;
+      alacarteEntries[key]=[];
+      alacarteEntryMeta[key]={drink,cat};
+      const needsPer=itemNeedsPerUnit(null,drink);
+      let fixedHTML='';
+      if(drink.fixed) fixedHTML=`<span class="item-fixed-note">📌 ${drink.fixed}</span>`;
+      if(drink.fixedNote) fixedHTML+=`<span class="item-fixed-note">📌 ${drink.fixedNote}</span>`;
+      html+=`<div class="item-row">
+        <div class="item-main-col">
+          <span class="item-name">${drink.name}</span>
+          ${needsPer?'':`${fixedHTML}`}
+          <div id="entries-${key}" class="sub-entries-container"></div>
+        </div>
+        <span class="item-price-label">$${drink.price}</span>
+        <div class="item-qty">
+          <button class="qty-btn" onclick="addEntry('${key}',${drink.price},DRINK_CATS[${ci}].drinks[${di}],null)">＋</button>
+          <span class="qty-num" id="qty-${key}">0</span>
+          <button class="qty-btn minus-btn" onclick="quickRemoveLast('${key}',${drink.price},DRINK_CATS[${ci}].drinks[${di}],null)">－</button>
+        </div>
+        <span class="item-subtotal" id="isub-${key}"></span>
+      </div>`;
+    });
+    html+='</div>';
+  });
+
+  body.innerHTML=html;
+}
+
+function quickRemoveLast(key,price,drink,cat){
+  const entries=alacarteEntries[key]||[];
+  if(entries.length===0)return;
+  entries.pop();
+  alacarteEntries[key]=entries;
+  renderSubEntries(key,price,drink,cat);
+  updateTotal();
+}
+
+// Legacy alacarteQty shim — now derived from entries
+function getQty(key){return (alacarteEntries[key]||[]).length;}
+
+// Returns the correct price for a food item (pet menu respects member status)
+function getPetPrice(ci,ii){
+  const cat=ALACARTE_CATS[ci];
+  const item=cat.items[ii];
+  if(cat.isPetMenu&&item.memberPrice&&isMember()) return item.memberPrice;
+  return item.price;
+}
+
+// Refresh pet menu price labels and subtotals when member status changes
+function refreshPetMenuPrices(){
+  ALACARTE_CATS.forEach((cat,ci)=>{
+    if(!cat.isPetMenu)return;
+    cat.items.forEach((item,ii)=>{
+      const key=`f_${ci}_${ii}`;
+      const qty=getQty(key);
+      const price=getPetPrice(ci,ii);
+      if(qty>0){
+        document.getElementById(`isub-${key}`).textContent=`$${qty*price}`;
+      }
+    });
+  });
+}
+
+function getAlacarteSub(){
+  let total=0;
+  ALACARTE_CATS.forEach((cat,ci)=>{
+    cat.items.forEach((item,ii)=>{
+      const price=cat.isPetMenu?getPetPrice(ci,ii):item.price;
+      total+=getQty(`f_${ci}_${ii}`)*price;
+    });
+  });
+  DRINK_CATS.forEach((cat,ci)=>{
+    cat.drinks.forEach((drink,di)=>{
+      total+=getQty(`d_${ci}_${di}`)*drink.price;
+    });
+  });
+  return total;
+}
+
+// ═══════════════════════════════════════════════════
+// TOTAL
+// ═══════════════════════════════════════════════════
+function updateTotal(){
+  const cards=document.querySelectorAll('.order-card');
+  const rowsEl=document.getElementById('total-rows');
+  let mainSub=0,rows='';
+
+  if(cards.length>0){
+    rows+='<div class="total-row cat-header"><span>個人主餐</span></div>';
+    cards.forEach(card=>{
+      const id=card.id.replace('card-','');
+      const d=cardData[id];if(!d)return;
+      const nameEl=document.getElementById(`name-${id}`);
+      const name=nameEl?(nameEl.value.trim()||`Guest ${id}`):`Guest ${id}`;
+      const mainVal=document.getElementById(`main-${id}`)?document.getElementById(`main-${id}`).value:'';
+      let mainName='（未選主餐）';
+      if(mainVal){const{key,i}=JSON.parse(mainVal);mainName=MAINS[key].items[i].name.replace(/[✦🌶🥚]/g,'').trim().split('（')[0].trim();}
+      const setVal=document.getElementById(`set-${id}`)?document.getElementById(`set-${id}`).value:'';
+      const setStr=setVal?`＋套餐${setVal}`:'';
+      const sub=d.mainPrice+d.setExtra+d.setDrinkNet+d.indivDrinkPrice;
+      mainSub+=sub;
+      rows+=`<div class="total-row indent"><span>${name}　${mainName}${setStr}</span><span>$${sub}</span></div>`;
+    });
+  }
+
+  const alaSub=getAlacarteSub();
+  document.getElementById('alacarte-sub').textContent=`$${alaSub}`;
+
+  if(alaSub>0){
+    rows+='<div class="total-row cat-header"><span>單點</span></div>';
+    ALACARTE_CATS.forEach((cat,ci)=>{
+      cat.items.forEach((item,ii)=>{
+        const key=`f_${ci}_${ii}`;
+        const qty=getQty(key);
+        const price=cat.isPetMenu?getPetPrice(ci,ii):item.price;
+        if(qty>0){
+          const n=item.name.replace(/[✦🌶🥚]/g,'').trim();
+          if(cat.hasDressing){
+            (alacarteEntries[key]||[]).forEach((e,idx)=>{
+              const d=e['dressing']||'（未選醬料）';
+              rows+=`<div class="total-row indent"><span>${n}（${d}）</span><span>$${item.price}</span></div>`;
+            });
+          }else{
+            rows+=`<div class="total-row indent"><span>${n} ×${qty}</span><span>$${qty*price}</span></div>`;
+          }
+        }
+      });
+    });
+    DRINK_CATS.forEach((cat,ci)=>{
+      cat.drinks.forEach((drink,di)=>{
+        const key=`d_${ci}_${di}`;
+        const qty=getQty(key);
+        if(qty>0){
+          const needsPer=itemNeedsPerUnit(null,drink);
+          if(needsPer){
+            (alacarteEntries[key]||[]).forEach((e,idx)=>{
+              const entryId=`${key}_e${idx}`;
+              const opts=[];
+              if(drink.opts){drink.opts.forEach(og=>{
+                const el=document.getElementById(`${entryId}_${og.label}`);
+                if(el&&el.value)opts.push(el.value);
+              });}
+              if(drink.fixedNote)opts.unshift(drink.fixedNote);
+              const optStr=opts.length?`（${opts.join('／')}）`:'';
+              rows+=`<div class="total-row indent"><span>${drink.name}${optStr}</span><span>$${drink.price}</span></div>`;
+            });
+          }else{
+            rows+=`<div class="total-row indent"><span>${drink.name} ×${qty}</span><span>$${qty*drink.price}</span></div>`;
+          }
+        }
+      });
+    });
+  }
+
+  if(cards.length===0&&alaSub===0){
+    rowsEl.innerHTML='<div class="total-row" style="color:rgba(245,240,232,.4);font-style:italic;">尚未新增餐點</div>';
+  }else{
+    rowsEl.innerHTML=rows;
+  }
+
+  const foodSub=mainSub+alaSub;
+  const service=Math.round(foodSub*0.1);
+  const memberFee=document.getElementById('res-member').value==='new'?100:0;
+  const final=foodSub+service+memberFee;
+
+  document.getElementById('main-sub-display').textContent=`$${mainSub}`;
+  document.getElementById('alacarte-sub-display').textContent=`$${alaSub}`;
+  document.getElementById('subtotal-display').textContent=`$${foodSub}`;
+  document.getElementById('service-display').textContent=`$${service}`;
+  document.getElementById('member-fee-bar').style.display=memberFee?'flex':'none';
+  document.getElementById('total-display').innerHTML=`$${final} <small>元</small>`;
+}
+
+function onMemberChange(){
+  document.querySelectorAll('.order-card').forEach(card=>{
+    onMainChange(card.id.replace('card-',''));
+  });
+  refreshPetMenuPrices();
+  updateTotal();
+}
+
+// ═══════════════════════════════════════════════════
+// SUBMIT
+// ═══════════════════════════════════════════════════
+const GAS_URL='https://script.google.com/macros/s/AKfycbyM8S0SuNQYgCrywzLf_eLZsFCbGqO9IyXPmCYeBcrh9fYo9r5ivwBhUGbq-opK-jMD/exec';
+
+// 取得飲料的客製化選項字串（甜度、溫度、造型等）
+function getDrinkOptsLabel(drink, prefix){
+  if(!drink) return '';
+  const parts=[];
+  if(drink.fixed) parts.push(drink.fixed);
+  if(drink.fixedNote) parts.push(drink.fixedNote);
+  if(drink.opts){
+    drink.opts.forEach(og=>{
+      const el=document.getElementById(`${prefix}_${og.label}`);
+      if(el&&el.value) parts.push(el.value);
+    });
+  }
+  return parts.length?`（${parts.join('／')})` :'';
+}
+
+function buildOrderSummary(){
+  // 個人主餐明細
+  const cards=document.querySelectorAll('.order-card');
+  const mainLines=[];
+  cards.forEach(card=>{
+    const id=card.id.replace('card-','');
+    const d=cardData[id];if(!d)return;
+    const name=document.getElementById(`name-${id}`).value.trim()||`Guest ${id}`;
+    const mainVal=document.getElementById(`main-${id}`).value;
+    let mainName='（未選）';
+    if(mainVal){const{key,i}=JSON.parse(mainVal);mainName=MAINS[key].items[i].name.replace(/[🌶🥚]/g,'').trim();}
+
+    // 套餐飲料＋選項
+    const setVal=document.getElementById(`set-${id}`).value;
+    let setStr='';
+    if(setVal){
+      const setDrinkVal=document.getElementById(`setdrink-${id}`).value;
+      if(setDrinkVal){
+        const dd=DRINK_BY_ID[setDrinkVal];
+        const optsLabel=getDrinkOptsLabel(dd,`sdopt_${id}`);
+        setStr=` ＋套餐${setVal}／${dd.name}${optsLabel}`;
+      } else {
+        setStr=` ＋套餐${setVal}`;
+      }
+    }
+
+    // 個人單點飲品＋選項
+    const idVal=document.getElementById(`idrink-${id}`).value;
+    let idStr='';
+    if(idVal){
+      const dd=DRINK_BY_ID[idVal];
+      const optsLabel=getDrinkOptsLabel(dd,`idopt_${id}`);
+      idStr=` ／ 單點飲品：${dd.name}${optsLabel}`;
+    }
+
+    const sub=d.mainPrice+d.setExtra+d.setDrinkNet+d.indivDrinkPrice;
+    mainLines.push(`${name}：${mainName}${setStr}${idStr}　$${sub}`);
+  });
+
+  // 單點明細
+  const singleLines=[];
+  ALACARTE_CATS.forEach((cat,ci)=>{
+    cat.items.forEach((item,ii)=>{
+      const key=`f_${ci}_${ii}`;
+      const entries=alacarteEntries[key]||[];
+      if(!entries.length)return;
+      const n=item.name.replace(/[🌶🥚]/g,'').trim();
+      const price=cat.isPetMenu?getPetPrice(ci,ii):item.price;
+      if(cat.hasDressing){
+        entries.forEach((e,idx)=>{
+          const el=document.getElementById(`${key}_e${idx}_dressing`);
+          const dressing=el&&el.value?el.value:'未選醬料';
+          singleLines.push(`${n}（${dressing}）　$${price}`);
+        });
+      }else{
+        singleLines.push(`${n} ×${entries.length}　$${entries.length*price}`);
+      }
+    });
+  });
+
+  DRINK_CATS.forEach((cat,ci)=>{
+    cat.drinks.forEach((drink,di)=>{
+      const key=`d_${ci}_${di}`;
+      const entries=alacarteEntries[key]||[];
+      if(!entries.length)return;
+      const needsPer=itemNeedsPerUnit(null,drink);
+      if(needsPer){
+        entries.forEach((e,idx)=>{
+          const entryId=`${key}_e${idx}`;
+          const optsLabel=getDrinkOptsLabel(drink,entryId);
+          singleLines.push(`${drink.name}${optsLabel}　$${drink.price}`);
+        });
+      }else{
+        // 固定選項飲料
+        const fixedNote=drink.fixed||drink.fixedNote?`（${drink.fixed||drink.fixedNote}）`:'';
+        singleLines.push(`${drink.name}${fixedNote} ×${entries.length}　$${entries.length*drink.price}`);
+      }
+    });
+  });
+
+  return {mainLines, singleLines};
+}
+
+function submitOrder(){
+  const info=getResInfo();
+
+  // 驗證訂位資訊
+  if(!IS_QR_MODE){
+    const adult = Number(document.getElementById('res-adult').value)||0;
+    if(!info.resName||!info.resDate||!info.resTime||adult===0){
+      showToast('請先填寫完整訂位資訊 ✦');return;
+    }
+  }
+
+  const cards=document.querySelectorAll('.order-card');
+  let valid=true;
+  cards.forEach(card=>{
+    const id=card.id.replace('card-','');
+    if(!document.getElementById(`name-${id}`).value.trim()||!document.getElementById(`main-${id}`).value)valid=false;
+    const setVal=document.getElementById(`set-${id}`).value;
+    if(setVal&&!document.getElementById(`setdrink-${id}`).value)valid=false;
+  });
+  if(!valid){showToast('請填寫所有必填欄位，並為套餐選擇飲料 ✦');return;}
+
+  const mainSub=Object.values(cardData).reduce((s,d)=>s+d.mainPrice+d.setExtra+d.setDrinkNet+d.indivDrinkPrice,0);
+  const alaSub=getAlacarteSub();
+  const foodSub=mainSub+alaSub;
+  const service=Math.round(foodSub*0.1);
+  const memberFee=document.getElementById('res-member').value==='new'?100:0;
+  const final=foodSub+service+memberFee;
+
+  const {mainLines,singleLines}=buildOrderSummary();
+
+  alert(`✦ 今鶴義式餐酒館 點餐確認 ✦\n\n訂位人：${info.resName}\n用餐時間：${info.resDate} ${info.resTime}\n用餐人數：${info.resPax} 位\n會員身份：${info.member}\n\n小計：$${foodSub}\n服務費(10%)：$${service}${memberFee?`\n入會費：$${memberFee}`:''}\n預估總計：$${final} 元\n\n感謝您的訂位！`);
+
+  const payload={
+    bookingId: info.bookingId,
+    resName:   info.resName,
+    resDate:   info.resDate,
+    resTime:   info.resTime,
+    resPax:    info.resPax,
+    member:    info.member,
+    mainOrders: mainLines.join('\n'),
+    singleOrders: singleLines.join('\n'),
+    foodSub, service, memberFee, total: final,
+    isQRMode: IS_QR_MODE,
+  };
+
+  showToast('點餐單送出中⋯');
+
+  fetch(GAS_URL,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  })
+  .then(()=>{
+    showToast('✅ 點餐單已送出，店家已收到通知！');
+  })
+  .catch(err=>{
+    console.error(err);
+    showToast('⚠️ 送出失敗，請截圖後告知店家');
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// CSV EXPORT
+// ═══════════════════════════════════════════════════
+function exportCSV(){
+  const esc=s=>'"'+String(s).replace(/"/g,'""')+'"';
+  const resName=document.getElementById('res-name').value.trim()||'（未填）';
+  const resPax=document.getElementById('res-pax').value||'（未填）';
+  const dateOpt=document.getElementById('res-date');
+  const dateLabel=dateOpt.value?dateOpt.options[dateOpt.selectedIndex].text:'（未選）';
+  const resTime=document.getElementById('res-time').value||'（未選）';
+  const memberSel=document.getElementById('res-member');
+  const memberLabel=memberSel.options[memberSel.selectedIndex].text;
+
+  const rows=[];
+  rows.push(['今鶴義式餐酒館 大訂點餐單']);
+  rows.push(['訂位人',resName,'日期',dateLabel,'時段',resTime,'人數',resPax,'會員',memberLabel]);
+  rows.push([]);
+  rows.push(['▼ 個人主餐']);
+  rows.push(['座位','暱稱','主餐','套餐','套餐飲料','飲料選項','單點飲品','單點飲品選項','小計']);
+
+  document.querySelectorAll('.order-card').forEach(card=>{
+    const id=card.id.replace('card-','');
+    const d=cardData[id];if(!d)return;
+    const name=document.getElementById(`name-${id}`).value.trim()||`Guest ${id}`;
+    const mainVal=document.getElementById(`main-${id}`).value;
+    let mainName='（未選）';
+    if(mainVal){const{key,i}=JSON.parse(mainVal);mainName=MAINS[key].items[i].name.replace(/[✦🌶🥚]/g,'').trim().split('（')[0].trim();}
+    const setVal=document.getElementById(`set-${id}`).value;
+    const setName=setVal?SET_MEALS[setVal].name:'';
+    const setDrinkVal=document.getElementById(`setdrink-${id}`).value;
+    let setDrinkName='',setDrinkOpts='';
+    if(setDrinkVal){
+      const dd=DRINK_BY_ID[setDrinkVal];setDrinkName=dd.name;
+      setDrinkOpts=getDrinkOptStr(dd,`sdopt_${id}`);
+    }
+    const idVal=document.getElementById(`idrink-${id}`).value;
+    let idName='',idOpts='';
+    if(idVal){
+      const dd=DRINK_BY_ID[idVal];idName=dd.name;
+      idOpts=getDrinkOptStr(dd,`idopt_${id}`);
+    }
+    const sub=d.mainPrice+d.setExtra+d.setDrinkNet+d.indivDrinkPrice;
+    rows.push([id,name,mainName,setName,setDrinkName,setDrinkOpts,idName,idOpts,sub]);
+  });
+
+  rows.push([]);rows.push(['▼ 單點']);
+  rows.push(['類別','品項','選項','單價','小計']);
+
+  // food — one row per entry
+  ALACARTE_CATS.forEach((cat,ci)=>{
+    cat.items.forEach((item,ii)=>{
+      const key=`f_${ci}_${ii}`;
+      const entries=alacarteEntries[key]||[];
+      if(entries.length===0)return;
+      const n=item.name.replace(/[✦🌶🥚]/g,'').trim();
+      const price=cat.isPetMenu?getPetPrice(ci,ii):item.price;
+      if(cat.hasDressing){
+        entries.forEach((e,idx)=>{
+          const entryId=`${key}_e${idx}`;
+          const el=document.getElementById(`${entryId}_dressing`);
+          const d=el&&el.value?el.value:'（未選醬料）';
+          rows.push([cat.cat,n,d,price,price]);
+        });
+      }else{
+        const priceNote=cat.isPetMenu?(isMember()?'會員價':'一般價'):'';
+        rows.push([cat.cat,n,priceNote,price,entries.length*price]);
+      }
+    });
+  });
+  // drinks — one row per entry
+  DRINK_CATS.forEach((cat,ci)=>{
+    cat.drinks.forEach((drink,di)=>{
+      const key=`d_${ci}_${di}`;
+      const entries=alacarteEntries[key]||[];
+      if(entries.length===0)return;
+      const needsPer=itemNeedsPerUnit(null,drink);
+      if(needsPer){
+        entries.forEach((e,idx)=>{
+          const entryId=`${key}_e${idx}`;
+          const opts=[];
+          if(drink.fixedNote)opts.push(drink.fixedNote);
+          if(drink.opts){drink.opts.forEach(og=>{
+            const el=document.getElementById(`${entryId}_${og.label}`);
+            if(el&&el.value)opts.push(el.value);
+          });}
+          rows.push([cat.cat,drink.name,opts.join('／'),drink.price,drink.price]);
+        });
+      }else{
+        const fixedNote=drink.fixed||drink.fixedNote||'';
+        rows.push([cat.cat,drink.name,fixedNote,drink.price,entries.length*drink.price]);
+      }
+    });
+  });
+
+  const foodSub=Object.values(cardData).reduce((s,d)=>s+d.mainPrice+d.setExtra+d.setDrinkNet+d.indivDrinkPrice,0)+getAlacarteSub();
+  const service=Math.round(foodSub*0.1);
+  const memberFee=memberSel.value==='new'?100:0;
+  const final=foodSub+service+memberFee;
+  rows.push([]);
+  rows.push(['餐點小計','',foodSub]);
+  rows.push(['服務費 10%','',service]);
+  if(memberFee)rows.push(['入會費','',memberFee]);
+  rows.push(['預估總計','',final]);
+
+  const csv='\uFEFF'+rows.map(r=>r.map(esc).join(',')).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`今鶴點餐單_${resName}_${dateLabel.replace(/[\/\s()週]/g,'')}.csv`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  showToast('CSV 已匯出！');
+}
+
+// ═══════════════════════════════════════════════════
+// URL PARAMS — QR Code 模式
+// ═══════════════════════════════════════════════════
+let URL_PARAMS = {};
+let IS_QR_MODE = false;
+
+function parseURLParams(){
+  const params = new URLSearchParams(window.location.search);
+  URL_PARAMS = {
+    bookingId: params.get('id') || '',
+    name:      params.get('name') || '',
+    date:      params.get('date') || '',
+    time:      params.get('time') || '',
+    pax:       params.get('pax') || '',
+    adult:     params.get('adult') || '',
+    child:     params.get('child') || '',
+    member:    params.get('member') || 'none',
+  };
+  IS_QR_MODE = !!(URL_PARAMS.bookingId && URL_PARAMS.name && URL_PARAMS.date && URL_PARAMS.time);
+}
+
+function initQRMode(){
+  document.getElementById('res-locked').style.display = 'block';
+  document.getElementById('res-editable').style.display = 'none';
+
+  const days=['日','一','二','三','四','五','六'];
+  const d = new Date(URL_PARAMS.date + 'T00:00:00');
+  const dateLabel = `${URL_PARAMS.date.replace(/-/g,'/')} (週${days[d.getDay()]})`;
+  const memberMap = {none:'不需入會', new:'用餐當日 $100 入會（享會員價）', existing:'已有舊會員（享會員價）'};
+
+  // 人數顯示：有大人小孩分開就分開顯示，否則用 pax
+  let paxLabel = '';
+  if(URL_PARAMS.adult || URL_PARAMS.child){
+    const adultNum = Number(URL_PARAMS.adult)||0;
+    const childNum = Number(URL_PARAMS.child)||0;
+    paxLabel = `大人 ${adultNum} 位`;
+    if(childNum > 0) paxLabel += `　小孩 ${childNum} 位`;
+  } else {
+    paxLabel = URL_PARAMS.pax + ' 位';
+  }
+
+  document.getElementById('locked-name').textContent = URL_PARAMS.name;
+  document.getElementById('locked-pax').textContent = paxLabel;
+  document.getElementById('locked-date').textContent = dateLabel;
+  document.getElementById('locked-time').textContent = URL_PARAMS.time;
+  document.getElementById('locked-member').textContent = memberMap[URL_PARAMS.member] || '不需入會';
+
+  // 同步給 submitOrder 使用
+  document.getElementById('res-name').value = URL_PARAMS.name;
+  document.getElementById('res-pax').value = URL_PARAMS.pax;
+
+  const memberSel = document.getElementById('res-member');
+  memberSel.value = URL_PARAMS.member || 'none';
+  onMemberChange();
+
+  document.getElementById('header-subtitle').textContent = '請填寫您的暱稱與餐點選擇，完成後送出即可';
+  document.getElementById('guest-section-title').textContent = '✦ 我的點餐';
+
+  const exportBtn = document.querySelector('.btn-export');
+  if(exportBtn) exportBtn.style.display = 'none';
+}
+
+// 同步大人小孩加總到隱藏的 res-pax
+function syncPax(){
+  const adult = Number(document.getElementById('res-adult').value)||0;
+  const child = Number(document.getElementById('res-child').value)||0;
+  document.getElementById('res-pax').value = adult + child;
+}
+
+// 給 submitOrder 用：取得當前訂位資訊
+function getResInfo(){
+  if(IS_QR_MODE){
+    const days=['日','一','二','三','四','五','六'];
+    const d = new Date(URL_PARAMS.date + 'T00:00:00');
+    let paxLabel = '';
+    if(URL_PARAMS.adult || URL_PARAMS.child){
+      const a = Number(URL_PARAMS.adult)||0;
+      const c = Number(URL_PARAMS.child)||0;
+      paxLabel = `大人 ${a} 位${c>0?`　小孩 ${c} 位`:''}`;
+    } else {
+      paxLabel = URL_PARAMS.pax + ' 位';
+    }
+    return {
+      resName: URL_PARAMS.name,
+      resDate: `${URL_PARAMS.date.replace(/-/g,'/')} (週${days[d.getDay()]})`,
+      resTime: URL_PARAMS.time,
+      resPax:  paxLabel,
+      member:  document.getElementById('res-member').options[document.getElementById('res-member').selectedIndex].text,
+      bookingId: URL_PARAMS.bookingId,
+    };
+  } else {
+    const dateOpt = document.getElementById('res-date');
+    const memberSel = document.getElementById('res-member');
+    const adult = Number(document.getElementById('res-adult').value)||0;
+    const child = Number(document.getElementById('res-child').value)||0;
+    const paxLabel = `大人 ${adult} 位${child>0?`　小孩 ${child} 位`:''}`;
+    return {
+      resName: document.getElementById('res-name').value.trim(),
+      resDate: dateOpt.value ? dateOpt.options[dateOpt.selectedIndex].text : '',
+      resTime: document.getElementById('res-time').value,
+      resPax:  paxLabel,
+      member:  memberSel.options[memberSel.selectedIndex].text,
+      bookingId: '',
+    };
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  parseURLParams();
+  if(IS_QR_MODE){
+    initQRMode();
+  } else {
+    buildDateOptions();
+  }
+  buildAlacarte();
+  document.getElementById('cards-container').addEventListener('input',e=>{
+    if(e.target.type==='text')updateTotal();
+  });
+  addCard();
+});
+
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+</script>
+</body>
+</html>
